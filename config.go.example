@@ -1,0 +1,6 @@
+package main
+
+const (
+	// OfficialDomain is the base subdomain this program is serving on.
+	OfficialDomain = "shop.wii.com"
+)
