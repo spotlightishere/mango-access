@@ -25,5 +25,5 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./site")))
 
 	// Listen on a locally bound port so that this can be used in conjunction with mango-upgrade.
-	panic(http.ListenAndServe(":4453", logRequest(http.DefaultServeMux)))
+	panic(http.ListenAndServe("127.0.0.1:4453", logRequest(http.DefaultServeMux)))
 }

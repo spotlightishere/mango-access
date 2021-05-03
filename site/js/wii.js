@@ -50,6 +50,24 @@ function wiiShop() {
 }
 
 /**
+ * Represents the wiiKeyboard object type inserted into the engine on any Wii.
+ * This object allows using a native keyboard.
+ * You should instantiate it without any parameters.
+ *
+ * @constructor
+ */
+function wiiKeyboard() {
+    /**
+     * Brings up a keyboard.
+     * @param type {number} Type of keyboard. TODO: Document
+     * @param rowLimit {number} Number of rows the user should be able to type.
+     * @param isPasswordField {boolean} Whether to treat text entered as a password or not.
+     * @param title {string} Content to show as a hint while typing.
+     */
+    this.call = function(type, rowLimit, isPasswordField, title) {}
+}
+
+/**
  * Represents the ECommerceInterface object type inserted into the engine on any Wii.
  * This high-level object allows a great amount of interaction with the underlying EC library.
  * You should instantiate it without any parameters, and only have one per page. Things get hairy otherwise.
@@ -77,7 +95,9 @@ function ECommerceInterface() {
     this.setWebSvcUrls = function(easUrl, iasUrl, casUrl) {}
 
     /**
+     * Retrieves the current log.
      *
+     * @returns {string}
      */
     this.getLog = function() {}
 
@@ -101,7 +121,8 @@ function ECommerceInterface() {
 }
 
 /**
- * Represents the progress of an asyncronous operation performed by EC. This should not be instantiated by itself.
+ * Represents the progress of an asynchronous operation performed by EC.
+ * This should not be instantiated by itself.
  *
  * @constructor
  */
