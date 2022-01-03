@@ -2,28 +2,77 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <script type="text/javascript" src="js/common.js"></script>
     <title>Eval</title>
     <script type="text/javascript">
-        const shop = new wiiShop();
         const keyboard = new wiiKeyboard();
+
+        const shop = new wiiShop();
         // ECommerceInterface object.
         const ec = new ECommerceInterface();
 
         // Mitigates timeouts.
         const connected = shop.connecting;
+
+        // Set endpoints.
+        // It seems that these URLs must be specified once per every page, as they do not persist.
+        // CAS doesn't seem to be used, and is optional. Nintendo often doesn't set it!
+        // TODO(spotlightishere): can we omit this?
+        // example: ec.setWebSvcUrls("https://ecs.a.taur.cloud/ecs/services/ECommerceSOAP", "https://ias.a.taur.cloud/ias/services/IdentityAuthenticationSOAP", "https://cas.a.taur.cloud/cas/services/CatalogingSOAP")
+        ec.setWebSvcUrls(getECS(), getIAS(), getCAS());
+
+        // CCS/UCS are for downloading contents. UCS doesn't seem to be used...?
+        // Request is <ccs,ucs url>/<title ID>/TMD -> <ccs,ucs url>/<title ID>/<content IDs>
+        // example: ec.setContentUrls("https://ccs.a.taur.cloud/", "https://ucs.a.taur.cloud/");
+        ec.setContentUrls(getCCS(), getUCS());
+
+        // Long-going operations, such as checkRegistration, return an ECProgress wrapper.
+        // I created a watchdog of sorts to iterate through and determine changes.
+        // Unclear if this is the best approach!
+        completeOp(ec.checkRegistration(), function() {
+            // POSTs the CheckRegistration type.
+            // Part of this is setting ec.getDeviceInfo().registrationStatus
+            const deviceInfo = ec.getDeviceInfo();
+
+
+            // Nintendo officially calls ec.sendChallengeReq(), POSTing the GetChallenge type.
+            // This returns a Challenge key upon operation success, accessible via ec.getChallengeResp().
+            // This is quite frankly useless, as nothing is being challenged - perhaps Nintendo used it
+            // from http -> https?
+            //
+            // I've hardcoded it to NintyWhyPls in WiiSOAP, and do the same here.
+            if (deviceInfo.registrationStatus === "R") {
+                trace("Registered!");
+                // syncRegistration ensures that the client has the latest token from the server.
+                // We could potentially allow token updating at a point, but do not currently.
+                // TODO(spotlightishere): Determine the best approach
+                completeOp(ec.syncRegistration("NintyWhyPls"), function() {
+                    trace("Synced!")
+                    
+                    // later on:
+                    // Shows Mario download animation!
+                    // Appears to request IOS too - not sure what to do about that
+                    // but it does not appear to fail if IOS is not available
+                    ec.downloadTitle("000100084F534344");
+                });
+            } else {
+                trace("Not registered :(");
+                // ec.register
+                completeOp(ec.register("NintyWhyPls"), function() {
+                    trace("Registered!");
+                });
+            }
+        });
     </script>
 </head>
 <body>
     <textarea id="evalInput" rows="5" style="width: 100%" onmousedown="keyboard.call( 1, 10, false, 'eval input');"></textarea>
     <textarea id="evalOutput" rows="16" style="width: 100%" readonly>eval output</textarea>
     <p>
-        <button onmousedown="window.history.go(-1); return false;">back</button>
+        <button onmousedown="window.location = window.location.href + '?1'">reload</button>
         <button onmousedown="document.getElementById('evalOutput').value = eval(document.getElementById('evalInput').value);" style="color: #008000;">eval</button>
         <button onmousedown="document.getElementById('evalOutput').value = ec.getLog();">getECLog</button>
         <button onmousedown="shop.enableHRP();">escape!</button>
-    </p>
-    <p id="shopConnect" style="display: none;">
-        stuff goes here.
     </p>
 </body>
 </html>

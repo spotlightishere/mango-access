@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/logrusorgru/aurora"
 	"log"
 	"net/http"
+
+	"github.com/logrusorgru/aurora/v3"
 )
 
 func logRequest(handler http.Handler) http.Handler {

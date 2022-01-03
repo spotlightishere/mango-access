@@ -77,22 +77,42 @@ function wiiKeyboard() {
 function ECommerceInterface() {
     /**
      * Sets internal engine endpoints.
-     * @param {string} easUrl The endpoint used for EAS-related requests.
+     *
+     * @param {string} ecsUrl The endpoint used for ECS-related requests.
      */
-    this.setWebSvcUrls = function(easUrl) {}
+    this.setWebSvcUrls = function(ecsUrl) {}
+
     /**
      * Sets internal engine endpoints.
-     * @param {string} easUrl The endpoint used for EAS-related requests.
+     *
+     * @param {string} ecsUrl The endpoint used for ECS-related requests.
      * @param {string} iasUrl The endpoint used for IAS-related requests.
      */
-    this.setWebSvcUrls = function(easUrl, iasUrl) {}
+    this.setWebSvcUrls = function(ecsUrl, iasUrl) {}
+
     /**
      * Sets internal engine endpoints.
-     * @param {string} easUrl The endpoint used for EAS-related requests.
+     *
+     * @param {string} ecsUrl The endpoint used for ECS-related requests.
      * @param {string} iasUrl The endpoint used for IAS-related requests.
-     * @param {string} casUrl This URL is unused. It is unknown what it would do.
+     * @param {string} casUrl The endpoint used for CAS-related requests. Unused within the Wii Shop Channel.
      */
-    this.setWebSvcUrls = function(easUrl, iasUrl, casUrl) {}
+    this.setWebSvcUrls = function(ecsUrl, iasUrl, casUrl) {}
+
+    /**
+     * Sets content URLs.
+     *
+     * @param ccsUrl The URL to use for cached content downloads over HTTP
+     */
+    this.setContentUrls = function(ccsUrl) {}
+
+    /**
+     * Sets content URLs.
+     *
+     * @param ccsUrl The URL to use for cached content downloads over HTTP
+     * @param ucsUrl The URL to use for uncached content downloads over HTTPS
+     */
+    this.setContentUrls = function(ccsUrl, ucsUrl) {}
 
     /**
      * Retrieves the current log.
@@ -118,6 +138,12 @@ function ECommerceInterface() {
     * @returns {ECProgress}
     */
     this.getProgress = function() {}
+
+    /**
+     *
+     * @returns {ECProgress}
+     */
+    this.checkDeviceStatus = function() {}
 }
 
 /**

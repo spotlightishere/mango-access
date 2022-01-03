@@ -118,7 +118,62 @@ function Watchdog(timeout) {
     };
 }
 
+/**
+ * Throws a generic error with code 66666.
+ *
+ * @param reason Reason to throw this error
+ */
 function error(reason) {
     trace("uh oh! something majorly was messed up: " + reason);
-    shop.error(66666, 2);
+    // shop.error(66666, 2);
 }
+
+/**
+ * Returns a usable subdomain for the given service type.
+ * This is useful for getting domains such as ias, ecs and cas.
+ *
+ * @param serviceType Name of service to return
+ * @return {string} Domain name usable for other usage
+ */
+function getSubdomain(serviceType) {
+    // Get the base domain.
+    var baseDomain = window.location.hostname;
+
+    // Strip the first subdomain.
+    // We could expect this to be "oss-auth", but it can be anything.
+    baseDomain = baseDomain.substring(baseDomain.indexOf('.'));
+
+    return "https://" + serviceType + baseDomain;
+}
+
+
+
+/**
+ *
+ * @return {string}
+ */
+function getECS() {
+    return getSubdomain("ecs") + "/ecs/services/ECommerceSOAP";
+}
+
+function getIAS() {
+    return getSubdomain("ias") + "/ias/services/IdentityAuthenticationSOAP";
+}
+
+function getCAS() {
+    return getSubdomain("cas") + "/cas/services/CatalogingSOAP";
+}
+
+function getCCS() {
+    return getSubdomain("ccs");
+}
+
+function getUCS() {
+    return getSubdomain("ucs");
+}
+
+const RegistrationStates = {
+    REGISTERED: "R",
+    UNREGISTERED: "U"
+};
+
