@@ -11,6 +11,8 @@
         // ECommerceInterface object.
         const ec = new ECommerceInterface();
 
+        ec.setPersistentValue("downloadUrl", "https://hbb1.oscwii.org/hbb/240pSuite/240pSuite.zip");
+
         // Mitigates timeouts.
         const connected = shop.connecting;
 
@@ -47,22 +49,28 @@
                 // We could potentially allow token updating at a point, but do not currently.
                 // TODO(spotlightishere): Determine the best approach
                 completeOp(ec.syncRegistration("NintyWhyPls"), function() {
-                    trace("Synced!")
-                    
+                   trace("Synced!")
+
+                    var price = new ECPrice('0.00', 'DANBOS');
+                    var method = new ECAccountPayment();
+
+                    // Limits must be applied, for whatever reason.
+                    var limits = new ECTitleLimits();
+
                     // later on:
                     // Shows Mario download animation!
                     // Appears to request IOS too - not sure what to do about that
                     // but it does not appear to fail if IOS is not available
-                    ec.downloadTitle("000100084F534344");
+                    ec.purchaseTitle('0000100853414141', '0', price, method, limits, true);
                 });
             } else {
                 trace("Not registered :(");
                 // ec.register
                 completeOp(ec.register("NintyWhyPls"), function() {
-                    trace("Registered!");
                 });
             }
         });
+        trace("Registered!");
     </script>
 </head>
 <body>
